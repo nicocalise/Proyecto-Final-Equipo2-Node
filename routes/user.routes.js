@@ -8,7 +8,7 @@ const isAuthenticated = require('../middleware/autentication');
 //Creating express router
 const route = express.Router();
 //Importing userModel
-const userModel = require('../models/user');
+const userModel = require('../models/User');
 
 //Creating register route
 route.post("/register", async (req, res) => {
