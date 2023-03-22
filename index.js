@@ -1,13 +1,24 @@
+const cookieParser = require('cookie-parser');
 const express = require('express');
+const dotenv = require('dotenv');
 
-//utils
-const connect = require('./utils/db.js');
+//Configure dotenv files above using any other library and files
+dotenv.config({path:'./config/config.env'}); 
+require('./config/conn');
+//Creating an app from express
+const app = express();
+const route = require('./routes/user.routes');
 
-//Server
-connect();
-const PORT = process.env.PORT || 3000;
-const server = express();
+//Using express.json to get request of json data
+app.use(express.json());
+//Configuring cookie-parser
+app.use(cookieParser()); 
 
-server.listen(PORT, () => {
-    console.log(`Server running in http://localhost:${PORT}`);
-  });
+//Using routes
+app.use('/api', route);
+
+//listening to the server
+app.listen(process.env.PORT,()=>{
+    console.log(`Server is listening at ${process.env.PORT}`);
+})
+
