@@ -6,15 +6,12 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    name: { type: String, required: false },
+    id: {type: Number, required: true},
+    name: { type: String, required: true },
     email: { type: String, trim: true, required: true },
     password: { type: String, trim: true, required: true },
     birthdate: { type: String },
     location:{ type: String },
-  },
-  {
-    // Esta propiedad servirá para guardar las fechas de creación y actualización de los documentos
-    timestamps: true,
   }
 );
 
