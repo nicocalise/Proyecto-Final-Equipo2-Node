@@ -1,27 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
-//Creating Schema using mongoose
-const userSchema = new mongoose.Schema({
-    name: {
-        type:String,
-        required:true,
-        minLength:[4,'Name should be minimum of 4 characters']
-    },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-    },
-    password:{
-        type:String,
-        required:true,
-        minLength:[8,'Password should be minimum of 8 characters']
-    },
-    token:{
-        type:String
-    }
-})
+const Schema = mongoose.Schema;
 
-//Creating models
-const userModel = mongoose.model('user',userSchema);
-module.exports = userModel;
+const UserSchema = new Schema(
+  {
+    name: { type: String, required: false },
+    email: { type: String, trim: true, required: true },
+    password: { type: String, trim: true, required: true },
+    birthdate: { type: String },
+    location:{ type: String },
+  },
+  {
+    // Esta propiedad servirá para guardar las fechas de creación y actualización de los documentos
+    timestamps: true,
+  }
+);
+
+UserSchema.pre("save", function (next) {
+  this.password = bcrypt.hashSync(this.password, saltRounds);
+  next();
+});
+
+const User = mongoose.model("users", UserSchema);
+module.exports = User;
