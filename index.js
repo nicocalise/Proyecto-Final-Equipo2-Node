@@ -1,24 +1,59 @@
-const cookieParser = require('cookie-parser');
 const express = require('express');
-const dotenv = require('dotenv');
+var cors = require('cors')
+const path = require('path');
+require('dotenv').config();
 
-//Configure dotenv files above using any other library and files
-dotenv.config({path:'./config/config.env'}); 
-require('./config/conn');
-//Creating an app from express
-const app = express();
-const route = require('./routes/user.routes');
+// Auth
+require("jsonwebtoken");
 
-//Using express.json to get request of json data
-app.use(express.json());
-//Configuring cookie-parser
-app.use(cookieParser()); 
+// Utils
+const connect = require('./utils/db');
+const logError = require('./utils/log');
 
-//Using routes
-app.use('/api', route);
+// Routes
 
-//listening to the server
-app.listen(process.env.PORT,()=>{
-    console.log(`Server is listening at ${process.env.PORT}`);
-})
+const userRoutes = require('./routes/user.routes');
+const eventRoutes = require('./routes/event.routes');
 
+
+// Server config
+connect();
+const PORT = 5000;
+const server = express();
+
+// Middlewares
+server.use(cors())
+server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
+server.use((req, res, next) => {
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+server.set("secretKey", "nodeRestApi");
+// server.use(express.static(path.join(__dirname, 'public')));
+
+// Routes
+server.use('/users', userRoutes);
+server.use('/events', eventRoutes);
+
+// Error control
+server.use('*', (req, res, next) => {
+  const msg = 'Route not found';
+  const error = new Error('Route not found');
+  error.status = 404;
+  next(error);
+  const log = `${msg}
+  ${req.path}
+  ${new Date().toISOString()}\n`;
+  logError(log);
+});
+server.use((error, req, res, next) => {
+  return res.status(error.status || 500).json(error.message || 'Unexpected error');
+});
+
+// Server
+server.listen(PORT, () => {
+  console.log(`Server running in http://localhost:${PORT}`);
+});
