@@ -11,7 +11,7 @@ const eventSchema = new Schema(
     eventType: { type: String},
     capacity : { type: String},
     duration : { type: String},
-
+    foto: { type: String}
   },
   {
     timestamps: true,
