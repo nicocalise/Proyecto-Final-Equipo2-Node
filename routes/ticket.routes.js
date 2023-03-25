@@ -6,7 +6,7 @@ const router = express.Router();
 //Find all
 router.get('/', async (req, res, next) =>{
     try{
-        const tickets = await Ticket.find().populate('event');
+        const tickets = await Ticket.find();
         return res.status(200).json(tickets);
     }catch(err){
         return next(err);

@@ -1,12 +1,14 @@
 {
-  "name": "casa_de_papel",
+  "name": "proyecto-final",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "loadCharacters": "node seeds/character.seed.js",
+    "loadEvent": "node seeds/event.seed.js",
+    "loadTicket": "node seeds/ticket.seed.js",
+    "loadUser": "node seeds/user.seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
