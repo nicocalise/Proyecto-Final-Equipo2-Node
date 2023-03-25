@@ -1,28 +1,19 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema(
-  {
-    id: {type: Number, required: true},
-    name: { type: String, required: true },
-    email: { type: String, trim: true, required: true },
-    password: { type: String, trim: true, required: true },
-    birthdate: { type: String },
-    location:{ type: String },
-  },
-  {
-    // Esta propiedad servirá para guardar las fechas de creación y actualización de los documentos
-    timestamps: true,
-  }
-);
-
-UserSchema.pre("save", function (next) {
-  this.password = bcrypt.hashSync(this.password, saltRounds);
-  next();
-});
-
-const User = mongoose.model("users", UserSchema);
-module.exports = User;
+const userSchema = new Schema(
+    {
+      name: { type: String, required: true },
+      email: { type: String, required: true }, 
+      password:{ type: String, required: true },
+      birthdate: { type: String, required: true },
+      location: { type: String, required: true },
+    },
+    {
+      timestamps: true,
+    }
+  );
+  
+  const User = mongoose.model('User', userSchema);
+  module.exports = User;
