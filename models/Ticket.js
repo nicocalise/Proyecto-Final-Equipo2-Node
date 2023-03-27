@@ -1,22 +1,9 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const ticketSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  cantidad_disponible: { type: Number, required: true },
+  fecha: {type: String, required: true},
+});
 
-//Esquema de tickets
-const ticketSchema = new Schema(
-  {
-    user: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-    date: { type: String , required: true},
-    //location: { type: String , required: true},
-    seat: {type: String, required: true},
-    event : [{ type: mongoose.Types.ObjectId, ref: 'Event' }],
-  },
-  {
-    // Esta propiedad servirá para guardar las fechas de creación y actualización de los documentos
-    timestamps: true,
-  }
-);
-
-// Creamos y exportamos el modelo Recipe
-const Ticket = mongoose.model('Ticket', ticketSchema);
-module.exports = Ticket;
+module.exports = mongoose.model('Ticket', ticketSchema);
