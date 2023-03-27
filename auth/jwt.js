@@ -3,11 +3,22 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res, next) => {
+  const { email } = req.body;
+
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
     const newUser = new User();
+    newUser.name = req.body.name;
     newUser.email = req.body.email;
+    newUser.password = req.body.password;
+    newUser.birthdate = req.body.birthdate;
+    newUser.location = req.body.location;
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
+    console.log(newUser.id);
 
     const userDb = await newUser.save();
 
@@ -49,7 +60,6 @@ const login = async (req, res, next) => {
 
 const isAuth = (req, res, next) => {
   const authorization = req.headers.authorization; 
-
   if(!authorization) { 
       return res.status(401).json({
           status: 401,
@@ -59,7 +69,7 @@ const isAuth = (req, res, next) => {
   }
 
   const splits = authorization.split(" ");
-  if(splits.length!=2 || splits[0]!="Bearer"){// 
+  if(splits.length!=2 || splits[0]!="Bearer"){ //
       return res.status(400).json({
           status: 400,
           message: "Bad Request",
@@ -68,10 +78,8 @@ const isAuth = (req, res, next) => {
   }
 
   const jwtString = splits[1] 
-
   try {
       var token = jwt.verify(jwtString, req.app.get("secretKey")); 
-
   } catch(err) {
       return next(err)
   }
