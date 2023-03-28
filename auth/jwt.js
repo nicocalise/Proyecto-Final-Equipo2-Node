@@ -1,3 +1,5 @@
+const express = require('express');
+
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -16,6 +18,8 @@ const register = async (req, res, next) => {
     newUser.password = req.body.password;
     newUser.birthdate = req.body.birthdate;
     newUser.location = req.body.location;
+    newUser.rol = req.body.rol;
+
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
     console.log(newUser.id);
@@ -92,17 +96,12 @@ const isAuth = (req, res, next) => {
   next();
 }
 
-const logout = (req, res, next) => {
-  try {
-    return res.json({
-      status: 200,
-      message: 'Logout OK',
-      token: null
-    });
-  } catch (err) {
-    return next(err)
-  }
+const logout =  (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/login');
 }
+
+
 
 module.exports = {
   register,
@@ -110,3 +109,4 @@ module.exports = {
   isAuth,
   logout
 }
+
