@@ -14,14 +14,26 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-router.post("/add", async (req, res) => {
+function requireAdmin(req, res, next) {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+}
+
+router.post("/add", requireAdmin, async (req, res) => {
   const { nombre, cantidad, fecha } = req.body;
 
   try {
     const ticket = await Ticket.findOne({ nombre });
 
     if (!ticket) {
-      const newTicket = new Ticket({ nombre, cantidad_disponible: cantidad, fecha });
+      const newTicket = new Ticket({
+        nombre,
+        cantidad_disponible: cantidad,
+        fecha,
+      });
       await newTicket.save();
       res.status(201).json(newTicket);
     } else {
@@ -35,20 +47,20 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.get('/', async (req, res, next) => {
-    const { viewAll } = req.query;
-    try {
-      let tickets = [];
-      if (viewAll === 'true') {
-        tickets = await Ticket.find().populate('tickets');
-      } else {
-        tickets = await Ticket.find();
-      }
-      return res.status(200).json(tickets);
-    } catch (error) {
-      return next(error);
+router.get("/", async (req, res, next) => {
+  const { viewAll } = req.query;
+  try {
+    let tickets = [];
+    if (viewAll === "true") {
+      tickets = await Ticket.find().populate("tickets");
+    } else {
+      tickets = await Ticket.find();
     }
-  });
+    return res.status(200).json(tickets);
+  } catch (error) {
+    return next(error);
+  }
+});
 
 router.post("/comprar", async (req, res) => {
   const { nombre, cantidad_comprada } = req.body;

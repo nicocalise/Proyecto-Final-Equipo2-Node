@@ -2,7 +2,8 @@ const express = require('express');
 var cors = require('cors')
 const path = require('path');
 require('dotenv').config();
-
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc  = require('swagger-jsdoc');
 // Auth
 require("jsonwebtoken");
 
