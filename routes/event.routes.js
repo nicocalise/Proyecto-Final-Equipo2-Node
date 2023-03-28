@@ -90,5 +90,15 @@ router.post('/create', [filesMiddleware.upload.single('foto'), filesMiddleware.u
 	}
   });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+      const {id} = req.params;
+      await Event.findByIdAndDelete(id);
+      return res.status(200).json('Evento Eliminado!');
+  } catch (error) {
+      return next(error);
+  }
+});
+
 
 module.exports = router;
