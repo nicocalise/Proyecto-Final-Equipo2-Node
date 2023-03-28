@@ -20,6 +20,21 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+//Find by ID
+router.get('/:id', async (req, res, next) => {
+	const id = req.params.id;
+	try {
+		const event = await Event.findById(id);
+		if (event) {
+			return res.status(200).json(event);
+		} else {
+			return res.status(404).json('No event found by this id');
+		}
+	} catch (error) {
+		return next(error);
+	}
+});
+
 router.post('/', async (req, res, next) => {
   try {
     const newEvent = new Event({
