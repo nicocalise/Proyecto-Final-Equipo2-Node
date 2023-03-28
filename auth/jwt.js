@@ -98,7 +98,8 @@ const isAuth = (req, res, next) => {
 
 const logout =  (req, res) => {
   res.clearCookie('token');
-  res.redirect('/login');
+  res.json("te has deslogueado con exito");
+  //res.redirect('/login');
 }
 
 
