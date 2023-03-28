@@ -22,6 +22,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    
     const newEvent = new Event({
       name: req.body.name,
       description: req.body.description,
@@ -52,6 +53,7 @@ router.post('/:eventId/add-event', async (req, res, next) => {
 
 router.post('/create', [filesMiddleware.upload.single('foto'), filesMiddleware.uploadToCloudinary], async (req, res, next) => {
 	try {
+    
 	  const cloudinaryUrl = req.file_url ? req.file_url : null;
 	  const { name, description, location, date, eventType, capacity, duration } = req.body;
 	  const event = {

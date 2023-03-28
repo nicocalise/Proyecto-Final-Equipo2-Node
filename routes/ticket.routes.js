@@ -1,78 +1,74 @@
-const express = require('express');
-const Ticket = require('../models/Ticket');
-
+const mongoose = require("mongoose");
+const express = require("express");
 const router = express.Router();
+const Ticket = require("../models/Ticket");
 
-//Find all
-router.get('/', async (req, res, next) =>{
-    try{
-        const tickets = await Ticket.find();
-        return res.status(200).json(tickets);
-    }catch(err){
-        return next(err);
+mongoose
+  .connect(
+    "mongodb+srv://equipo2:upgradehub@proyectofinal.lgsacwc.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     }
+  )
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+
+router.post("/add", async (req, res) => {
+  const { nombre, cantidad, fecha } = req.body;
+
+  try {
+    const ticket = await Ticket.findOne({ nombre });
+
+    if (!ticket) {
+      const newTicket = new Ticket({ nombre, cantidad_disponible: cantidad, fecha });
+      await newTicket.save();
+      res.status(201).json(newTicket);
+    } else {
+      ticket.cantidad_disponible += cantidad;
+      await ticket.save();
+      res.status(200).json(ticket);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error adding tickets" });
+  }
 });
 
-////find by id
-//router.get('/:id', async(req, res, next)=>{
-//    const { id } = req.params;
-//    try{
-//        const recipe = await Recipe.findById(id).populate('ingredients.ingredient');
-//        return res.status(200).json(recipe);
-//    }catch(err){
-//        return next(err);
-//    }
-//});
+router.get('/', async (req, res, next) => {
+    const { viewAll } = req.query;
+    try {
+      let tickets = [];
+      if (viewAll === 'true') {
+        tickets = await Ticket.find().populate('tickets');
+      } else {
+        tickets = await Ticket.find();
+      }
+      return res.status(200).json(tickets);
+    } catch (error) {
+      return next(error);
+    }
+  });
 
-////post
-//router.post('/', async(req, res, next)=>{
-//    try{
-//        const recipe = new Recipe({
-//            name: req.body.name,
-//            image: recipePicture,
-//            ingredients : []
-//        });
-//        const createdRecipe = await recipe.save();
-//        res.status(201).json(createdRecipe);
-//    }catch(err){
-//        return next(err);
-//    }
-//});
-//
-////add ingredient to a recipe
-//router.put('/:recipeId/add-ingredient', async (req, res, next) => {
-//    try {
-//        const { recipeId } = req.params;
-//        const { ingredientId } = req.body;
-//        const { quantity} = req.body;
-//        const updatedRecipe = await Recipe.findByIdAndUpdate(
-//            recipeId,
-//            { $push:{ 
-//                        ingredients:{ 
-//                                        ingredient:ingredientId,
-//                                        quantity:quantity
-//                                    }   
-//                    }
-//            },
-//            { new: true }
-//        );
-//        return res.status(200).json(updatedRecipe);
-//    } catch (error) {
-//        return next(error);
-//    }
-//});
-//
-////delete
-//router.delete('/:id', async (req, res, next) => {
-//    try {
-//        const {id} = req.params;
-//        await Recipe.findByIdAndDelete(id);
-//        return res.status(200).json('Recipe deleted!');
-//    } catch (error) {
-//        return next(error);
-//    }
-//});
+router.post("/comprar", async (req, res) => {
+  const { nombre, cantidad_comprada } = req.body;
 
+  try {
+    const ticket = await Ticket.findOne({ nombre });
 
+    if (!ticket) {
+      res.status(404).json({ message: "Ticket not found" });
+    } else if (ticket.cantidad_disponible < cantidad_comprada) {
+      res.status(400).json({ message: "Not enough tickets available" });
+    } else {
+      ticket.cantidad_disponible -= cantidad_comprada;
+      await ticket.save();
+      res.status(200).json(ticket);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error buying tickets" });
+  }
+});
 
 module.exports = router;
