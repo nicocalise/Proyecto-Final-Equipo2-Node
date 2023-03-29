@@ -36,7 +36,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 //Find by Name
-router.get('name/:name', async (req, res, next) => {
+router.get('/name/:name', async (req, res, next) => {
 	const names = req.params.name;
 	try {
 		const event = await Event.find({name: names});
