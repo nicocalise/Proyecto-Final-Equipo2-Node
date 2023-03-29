@@ -45,7 +45,7 @@ router.get('/name/:name', async (req, res, next) => {
     return res.status(404).json('No event found by this name');
   }else{
 	  try {
-	  	const event = await Event.find({name: names});
+	  	const event = await Event.find({name: { $regex: '.*' + names + '.*' }});
 	  	if (event) {
 	  		return res.status(200).json(event);
 	  	} else {
