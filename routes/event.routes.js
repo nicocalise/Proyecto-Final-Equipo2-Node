@@ -35,6 +35,21 @@ router.get('/:id', async (req, res, next) => {
 	}
 });
 
+//Find by Name
+router.get('name/:name', async (req, res, next) => {
+	const names = req.params.name;
+	try {
+		const event = await Event.find({name: names});
+		if (event) {
+			return res.status(200).json(event);
+		} else {
+			return res.status(404).json('No event found by this name');
+		}
+	} catch (error) {
+		return next(error);
+	}
+});
+
 router.post('/', async (req, res, next) => {
   try {
     
