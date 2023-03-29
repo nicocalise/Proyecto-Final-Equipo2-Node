@@ -37,9 +37,12 @@ router.get('/:id', async (req, res, next) => {
 
 //Find by Name
 router.get('/name/:name', async (req, res, next) => {
-	const names = req.params.name;
-  if(names == ''){
+  debugger
+  const names = req.params.name;
+
+  if(names == ':name'){
     console.log("No hay datos");
+    return res.status(404).json('No event found by this name');
   }else{
 	  try {
 	  	const event = await Event.find({name: names});
