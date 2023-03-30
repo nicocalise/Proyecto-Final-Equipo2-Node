@@ -9,7 +9,7 @@ const events = [
     location: ' Madrid',
     date: '18-04-2023',
     eventType: ' Familiar', //not required
-    capacity:' 1000', //not required
+    capacity: 1000, //not required
     duration:'2' //not required
   },
   {
@@ -18,17 +18,17 @@ const events = [
   location: ' Malaga',
   date: '30-05-2023',
   eventType: ' Heavy Metal', //not required
-  capacity:' 500', //not required
+  capacity: 500 , //not required
   duration:'1:30' //not required
 }
 ];
 
 const eventDocuments = events.map(item => new Event(item));
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/events';
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/events';
 
 mongoose
-  .connect(MONGODB_URI, {
+  .connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     })

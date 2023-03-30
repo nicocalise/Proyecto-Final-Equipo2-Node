@@ -10,7 +10,7 @@ const eventSchema = new Schema(
     location : { type: String, required: true },
     date :{ type: String, required: true },
     eventType: { type: String},
-    capacity : { type: String},
+    capacity : { type: Number, required:true},
     duration : { type: String},
     foto: { type: String}
   },

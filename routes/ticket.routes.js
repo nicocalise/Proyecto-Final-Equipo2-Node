@@ -3,16 +3,17 @@ const express = require("express");
 const router = express.Router();
 const Ticket = require("../models/Ticket");
 
-mongoose
-  .connect(
-    "mongodb+srv://equipo2:upgradehub@proyectofinal.lgsacwc.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+//mongoose
+//  .connect(
+//    //"mongodb+srv://equipo2:upgradehub@proyectofinal.lgsacwc.mongodb.net/?retryWrites=true&w=majority",
+//    "mongodb://localhost:27017/events",
+//    {
+//      useNewUrlParser: true,
+//      useUnifiedTopology: true,
+//    }
+//  )
+//  .then(() => console.log("MongoDB Connected"))
+//  .catch((err) => console.log(err));
 
 function requireAdmin(req, res, next) {
   if (req.user && req.user.role === "admin") {
@@ -62,11 +63,14 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/comprar", async (req, res) => {
-  const { nombre, cantidad_comprada } = req.body;
+router.post("/comprar/:id", async (req, res) => {
+  //const { nombre, cantidad_comprada } = req.body;
+  const cantidad_comprada = req.query.cantidad_comprada;
+  const id_event = req.params.id;
 
   try {
-    const ticket = await Ticket.findOne({ nombre });
+    //const ticket = await Ticket.findOne({ nombre });
+    const ticket = await Ticket.findOne({ id_event: id_event });
 
     if (!ticket) {
       res.status(404).json({ message: "Ticket not found" });

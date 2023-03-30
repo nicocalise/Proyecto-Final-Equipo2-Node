@@ -122,5 +122,26 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
+router.post("/comprar/:id", async (req, res) => {
+  const cantidad_comprada = req.query.cantidad_comprada;
+  const id_event = req.params.id;
+
+  try {
+    const event = await Event.findById(id_event);
+
+    if (!event) {
+      res.status(404).json({ message: "Ticket not found" });
+    } else if (event.capacity < cantidad_comprada) {
+      res.status(400).json({ message: "Not enough tickets available" });
+    } else {
+      event.capacity -= cantidad_comprada;
+      await event.save();
+      res.status(200).json(event);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error buying tickets" });
+  }
+});
 
 module.exports = router;
