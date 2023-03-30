@@ -4,9 +4,8 @@ const Ticket = require('../models/Ticket');
 
 const tickets = [
   {
-    id_event: '641b48bcea6aca1a4caebf56',
-    cantidad_disponible: 100,
-    fecha : '21-10-2023',
+    idUser: '641b5cb1dddce374e65beedc',
+    idEvent: '6425711afc0043e6a61613cb',
   }
 ];
 
