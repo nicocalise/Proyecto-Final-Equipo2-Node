@@ -4,19 +4,18 @@ const Ticket = require('../models/Ticket');
 
 const tickets = [
   {
-    user: '641b5cb1dddce374e65beedc',
-    date: ' 22-03-2023',
-    seat : 'A5',
-    event: '641b48bcea6aca1a4caebf56',
+    id_event: '641b48bcea6aca1a4caebf56',
+    cantidad_disponible: 100,
+    fecha : '21-10-2023',
   }
 ];
 
 const ticketDocuments = tickets.map(item => new Ticket(item));
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/events';
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/events';
 
 mongoose
-  .connect(MONGODB_URI, {
+  .connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     })

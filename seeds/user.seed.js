@@ -15,10 +15,10 @@ const users = [
 
 const userDocuments = users.map(item => new User(item));
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/events';
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/events';
 
 mongoose
-  .connect(MONGODB_URI, {
+  .connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     })
