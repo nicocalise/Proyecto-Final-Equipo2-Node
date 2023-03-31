@@ -144,4 +144,18 @@ router.post("/comprar/:id", async (req, res) => {
   }
 });
 
+//PUT
+router.put('/:id', async (req, res, next) => {
+  debugger
+  try {
+      const { id } = req.params
+      const eventModify = new Event(req.body) 
+      eventModify._id = id 
+      await Event.findByIdAndUpdate(id , eventModify)
+      return res.status(200).json(eventModify)
+  } catch (error) {
+      return next(error)
+  }
+});
+
 module.exports = router;
