@@ -3,9 +3,10 @@ const express = require("express");
 const router = express.Router();
 const Ticket = require("../models/Ticket");
 
-router.get("/", async (req, res, next) => {
+router.get("/:idUser", async (req, res, next) => {
+  const idUser = req.params.idUser;
   try {
-      tickets = await Ticket.find().populate("idUser").populate("idEvent");
+      tickets = await Ticket.find({ idUser:idUser });
     return res.status(200).json(tickets);
   } catch (error) {
     return next(error);

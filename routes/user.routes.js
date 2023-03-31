@@ -26,6 +26,16 @@ router.get("/", requireAdmin, async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    return res.status(200).json(user);
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.delete("/deleteUser/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
