@@ -6,7 +6,7 @@ const Ticket = require("../models/Ticket");
 router.get("/:idUser", async (req, res, next) => {
   const idUser = req.params.idUser;
   try {
-      tickets = await Ticket.find({ idUser:idUser });
+      tickets = await Ticket.find({ idUser:idUser }).populate("idEvent").populate("idUser");
     return res.status(200).json(tickets);
   } catch (error) {
     return next(error);
