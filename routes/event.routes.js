@@ -1,6 +1,6 @@
 const express = require('express');
 const Event = require('../models/Event');
-const filesMiddleware = require('../middlewares/files.middleware')
+const fileMiddlewares = require('../middlewares/files.middleware');
 
 const router = express.Router();
 
@@ -88,10 +88,10 @@ router.post('/:eventId/add-event', async (req, res, next) => {
   }
 });
 
-router.post('/create', [filesMiddleware.upload.single('foto'), filesMiddleware.uploadToCloudinary], async (req, res, next) => {
+router.post('/create', [fileMiddlewares.parser.single('foto')], async (req, res, next) => {
 	try {
     
-	  const cloudinaryUrl = req.file_url ? req.file_url : null;
+	  const cloudinaryUrl = req.file.path ? req.file.path : null;
 	  const { name, description, location, date, eventType, capacity, duration } = req.body;
 	  const event = {
       name,
