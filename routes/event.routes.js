@@ -37,7 +37,6 @@ router.get('/:id', async (req, res, next) => {
 
 //Find by Name
 router.get('/name/:name', async (req, res, next) => {
-  debugger
   const names = req.params.name;
 
   if(names == ':name'){
@@ -146,12 +145,13 @@ router.post("/comprar/:id", async (req, res) => {
 
 //PUT
 router.put('/:id', async (req, res, next) => {
-  debugger
   try {
-      const { id } = req.params
-      const eventModify = new Event(req.body) 
-      eventModify._id = id 
-      await Event.findByIdAndUpdate(id , eventModify)
+      const { id } = req.params;
+      const { quantity } = req.body;
+      const eventModify = await Event.findById(id);
+      eventModify._id = id
+      eventModify.capacity += quantity;
+      await eventModify.save();
       return res.status(200).json(eventModify)
   } catch (error) {
       return next(error)

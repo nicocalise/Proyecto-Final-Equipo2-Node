@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 const eventSchema = new Schema(
   {
     id: {type: Number, requires:true},
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    location : { type: String, required: true },
-    date :{ type: String, required: true },
+    name: { type: String },
+    description: { type: String },
+    location : { type: String },
+    date :{ type: String },
     eventType: { type: String},
     capacity : { type: Number, required:true},
     duration : { type: String},

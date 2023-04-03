@@ -15,14 +15,24 @@ router.get("/:idUser", async (req, res, next) => {
 
 //Creation POST
 router.post("/comprar", async( req, res, next)=>{
-  const { idUser, idEvent } = req.body;
+  const { idUser, idEvent, quantity } = req.body;
   try {
-      const newTicket = new Ticket({ idUser: idUser, idEvent:idEvent});
+      const newTicket = new Ticket({ idUser: idUser, idEvent:idEvent, quantity: quantity});
       const createdTicket = await newTicket.save();
       return res.status(201).json(createdTicket);
     } catch (error) {
       next(error);
     }
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+      const {id} = req.params;
+      await Ticket.findByIdAndDelete(id);
+      return res.status(200).json('Evento Eliminado!');
+  } catch (error) {
+      return next(error);
+  }
 });
 
 module.exports = router;
