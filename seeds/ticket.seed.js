@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const Ticket = require('../models/Ticket');
-//require('dotenv').config();
 
 const tickets = [
   {
     idUser: '641b5cb1dddce374e65beedc',
     idEvent: '6425711afc0043e6a61613cb',
+    quantity: 10
   }
 ];
 
