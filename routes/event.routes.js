@@ -1,6 +1,7 @@
 const express = require('express');
 const Event = require('../models/Event');
 const fileMiddlewares = require('../middlewares/files.middleware');
+const Ticket = require("../models/Ticket");
 
 const router = express.Router();
 
@@ -111,15 +112,28 @@ router.post('/create', [fileMiddlewares.parser.single('foto')], async (req, res,
 	}
   });
 
-router.delete('/:id', async (req, res, next) => {
-  try {
-      const {id} = req.params;
-      await Event.findByIdAndDelete(id);
-      return res.status(200).json('Evento Eliminado!');
-  } catch (error) {
-      return next(error);
-  }
-});
+  router.delete('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+  
+        // Buscar cualquier ticket que tenga el mismo idEvent que el evento que se está eliminando
+        const tickets = await Ticket.find({ idEvent: id });
+  
+        // Si se encontraron tickets, eliminarlos
+        if (tickets.length > 0) {
+            await Ticket.deleteMany({ idEvent: id });
+        }
+  
+        // Eliminar el evento
+        await Event.findByIdAndDelete(id);
+        res.redirect('/events');
+
+  
+        return res.status(200).json('Evento Eliminado!');
+    } catch (error) {
+        return next(error);
+    }
+  });
 
 router.post("/comprar/:id", async (req, res) => {
   const cantidad_comprada = req.query.cantidad_comprada;
